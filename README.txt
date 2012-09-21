@@ -4,18 +4,26 @@ Provides several programs to make the deployment procedure easier and more secur
 
 Programs:
 
-floqq-export
-
+`floqq-export`
 This program all it does is export the project git repository into a tar file 
 using `git archive`.
 
 
-floqq-configure
-
+`floqq-configure`
 This program will add the to the archive all the .yaml files and settings.py file
 you say.
 
 
-floqq-deploy
-
+`floqq-deploy`
 This program takes the project tar and deploys it to GAE.
+
+
+Development:
+
+Development installation: python setup.py develop
+Running tests: python setup.py test
+
+
+Installation:
+
+python setup.py install
