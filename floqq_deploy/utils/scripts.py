@@ -1,6 +1,12 @@
+#
+# Copyright (c) 2012 Floqq innovation SL. All Right Reserved
+#
+
 import os
 import tarfile
 import argparse
+
+from floqq_deploy.db import ENVIRONMENTS
 
 
 def is_dir(path):
@@ -13,6 +19,25 @@ def is_dir(path):
         msg = "%r is not a valid directory" % path
         raise argparse.ArgumentTypeError(msg)
     return path
+
+
+def is_valid_param_name(value):
+    """Checks if the settings parameter name is valid.
+
+    Raises:
+        argparse.ArgumentTypeError if is not a valid directory
+    """
+    try:
+        env, name = value.split(".")
+    except ValueError:
+        msg = "Parameter name must have the format <environ>.<param name>"
+        raise argparse.ArgumentTypeError(msg)
+
+    if env not in ENVIRONMENTS:
+        msg = "Specified environment is not supported"
+        raise argparse.ArgumentTypeError(msg)
+
+    return value
 
 
 def is_tar(path):

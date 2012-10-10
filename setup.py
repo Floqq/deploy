@@ -17,6 +17,8 @@ dependencies = [
 
 scripts = {
     "console_scripts": [
+        "floqq-init = floqq_deploy.scripts.init:main",
+        "floqq-config = floqq_deploy.scripts.config:main",
         "floqq-export = floqq_deploy.scripts.export:main",
         "floqq-configure = floqq_deploy.scripts.configure:main",
         "floqq-deploy = floqq_deploy.scripts.deploy:main",
