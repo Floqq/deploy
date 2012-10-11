@@ -20,16 +20,13 @@ def local(command):
     return output.strip()
 
 
-def archive(path, tree, output):
+def archive(tree, output, format="tar"):
     """Creates an archive of the files currently in the project index.
 
     Equivalent to:
-        git archive --format=tar -o <name>
+        git archive -o <name>
     """
-    cwd = os.getcwd()
-    os.chdir(path)
-    local("git archive --format=tar -o %s %s" % (output, tree))
-    os.chdir(cwd)
+    local("git archive --format=%s -o %s %s" % (format, output, tree))
 
 
 def rev_parse(tree):
@@ -37,13 +34,12 @@ def rev_parse(tree):
     return local("git rev-parse %s" % tree)
 
 
-def get_archive_filename(app_dir, tree, ext="tar"):
+def get_archive_filename(tree):
     """Generates a name suitable for use with the archive function.
 
     The name of the archive will be:
-        <name of the app enclosing directory>-<last commit id>.<extension>
+        <tree commit id>
     """
-    enclosing_dir = os.path.basename(os.path.abspath(app_dir))
-    app_id = rev_parse(tree)
-    filename = "%s-%s.%s" % (enclosing_dir, app_id, ext)
+    filename = rev_parse(tree)
+
     return filename

@@ -20,8 +20,9 @@ scripts = {
         "floqq-init = floqq_deploy.scripts.init:main",
         "floqq-config = floqq_deploy.scripts.config:main",
         "floqq-export = floqq_deploy.scripts.export:main",
-        "floqq-configure = floqq_deploy.scripts.configure:main",
-        "floqq-deploy = floqq_deploy.scripts.deploy:main",
+        "floqq-fetch-settings = floqq_deploy.scripts.fetch_settings:main",
+        "floqq-prepare = floqq_deploy.scripts.prepare:main",
+        # "floqq-deploy = floqq_deploy.scripts.deploy:main",
     ]
 }
 

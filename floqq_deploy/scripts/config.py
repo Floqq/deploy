@@ -31,11 +31,11 @@ def main(argv=None):
 
     args = parser.parse_args(argv)
 
-    env, name = args.name.split(".")
+    env, name = args.name.split(".", 1)
     value = args.value
     delete = args.delete
 
-    option = config(name=args.name, environment=env, value=value, delete=delete)
+    option = config(name=name, environment=env, value=value, delete=delete)
 
     if value is None:
         print option

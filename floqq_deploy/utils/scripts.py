@@ -28,16 +28,23 @@ def is_valid_param_name(value):
         argparse.ArgumentTypeError if is not a valid directory
     """
     try:
-        env, name = value.split(".")
+        env, name = value.split(".", 1)
     except ValueError:
         msg = "Parameter name must have the format <environ>.<param name>"
         raise argparse.ArgumentTypeError(msg)
 
-    if env not in ENVIRONMENTS:
+    is_valid_environment(env)
+
+    return value
+
+
+def is_valid_environment(env_name):
+    """Checks if the given environment name is allowed"""
+    if env_name not in ENVIRONMENTS:
         msg = "Specified environment is not supported"
         raise argparse.ArgumentTypeError(msg)
 
-    return value
+    return env_name
 
 
 def is_tar(path):
