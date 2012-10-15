@@ -57,8 +57,9 @@ def apply_settings(app_name, version):
             shutil.copy(filename, project_path)
 
     previous_version = config("current_version", section=app_name)
-    config("previous_version", section=app_name, value=previous_version)
-    config("current_version", section=app_name, value=version)
+    if previous_version != version:
+        config("previous_version", section=app_name, value=previous_version)
+        config("current_version", section=app_name, value=version)
 
     return settings_path, project_path
 
