@@ -40,10 +40,10 @@ class InitTest(unittest.TestCase):
             os.path.join(self.test_dir, ".deploy", "versions")))
 
     def test_head(self):
-        "Test that the db is initialized with the HEAD dir"
+        "Test that the db is initialized with the HEAD file"
         init(project_path=self.test_dir)
 
-        self.assertTrue(os.path.isdir(
+        self.assertTrue(os.path.isfile(
             os.path.join(self.test_dir, ".deploy", "HEAD")))
 
     def test_config(self):
@@ -130,7 +130,3 @@ class ConfigTest(unittest.TestCase):
         previous = config("settings_url", "production", delete=True)
 
         self.assertEqual("", previous)
-
-    def test_raises(self):
-        "Test that ValueError is raised if the environment is incorrect"
-        self.assertRaises(ValueError, config, name="name", environment="none")

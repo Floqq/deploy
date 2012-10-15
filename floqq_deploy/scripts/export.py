@@ -19,6 +19,16 @@ from floqq_deploy import git
 from floqq_deploy.db import get_versions_path, head
 from floqq_deploy.utils.scripts import is_dir
 from floqq_deploy.scripts import formatter
+from floqq_deploy.exceptions import CommandFailed
+
+
+def handle(args):
+    tree = args.tree
+    filename = git.get_archive_filename(tree)
+    print "Creating archive: %s" % filename
+    outputfile = os.path.join(get_versions_path(), filename)
+    git.archive(tree, output=outputfile, format="zip")
+    head(filename)
 
 
 def main(argv=None):
@@ -28,14 +38,11 @@ def main(argv=None):
                                      formatter_class=formatter)
     parser.add_argument("tree", help="Git tree name")
     args = parser.parse_args(argv)
-
-    tree = args.tree
-
-    filename = git.get_archive_filename(tree)
-    print "Creating archive: %s" % filename
-    outputfile = os.path.join(get_versions_path(), filename)
-    git.archive(tree, output=outputfile, format="zip")
-    head(filename)
+    try:
+        handle(args)
+    except CommandFailed, e:
+        print(e.message)
+        return 1
 
 
 if __name__ == "__main__":

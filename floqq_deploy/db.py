@@ -56,17 +56,17 @@ def get_current_path():
     return os.path.join(".deploy", "current")
 
 
-def config(name, environment, value=None, delete=False):
-    """Get/Set/Modify a setting on the given environment.
+def config(name, section, value=None, delete=False):
+    """Get/Set/Modify a setting on the given section.
 
-    To get a setting just pass the name and the environment.
-    To set a setting pass the name, the environment and a value.
-    To delete a setting pass the name, the environment and the `delete` flag to
+    To get a setting just pass the name and the section.
+    To set a setting pass the name, the section and a value.
+    To delete a setting pass the name, the section and the `delete` flag to
     True.
 
     Params
         name: name of the setting.
-        environment: environment (section) from which get the setting.
+        section: section from which get the setting.
         value (optional): value of the setting.
 
     Raises
@@ -77,52 +77,26 @@ def config(name, environment, value=None, delete=False):
         The previous value of the setting when "setting".
         The previous value of the setting when "deleting".
     """
-    if environment not in ENVIRONMENTS:
-        msg = "`environment` must be one of %s" % ", ".join(ENVIRONMENTS)
-        raise ValueError(msg)
-
     config_path = get_config_path()
     config = SafeConfigParser()
     config.read([config_path])
 
-    if config.has_option(environment, name):
-        option = config.get(environment, name)
+    if not config.has_section(section):
+        config.add_section(section)
+
+    if config.has_option(section, name):
+        option = config.get(section, name)
     else:
         option = None
     if value is not None:
-        config.set(environment, name, value)
+        config.set(section, name, value)
     elif delete:
-        config.remove_option(environment, name)
+        config.remove_option(section, name)
 
     with open(config_path, "w") as f:
         config.write(f)
 
     return option
-
-
-def fetch_settings(url, env):
-    """Copy the referenced settings by `url`.
-
-    Params
-        url: Url pointing to the settings.
-        env: Environment name of these settings.
-
-    Raises
-        ValueError if the url is not valid.
-        UnsupportedUrl if the url can't be handled.
-    """
-    if not url:
-        msg = "Invalid URL"
-        raise ValueError(msg)
-    dst = os.path.join(get_settings_path(), env)
-    if os.path.isdir(url):
-        src = url
-        if os.path.exists(dst):
-            shutil.rmtree(dst)
-        shutil.copytree(src, dst)
-    else:
-        msg = "I don't know how to fetch this url %r" % url
-        raise UnsupportedUrl(msg)
 
 
 def head(filename=None):
@@ -144,11 +118,42 @@ def head(filename=None):
             head.write("%s\n" % filename)
 
 
+def project_unpack(app_name):
+    """Unpack a project.
+
+    Get the current exported project (HEAD) and unpacks it in
+    .deploy/current/<app_name>/
+    
+    Params
+        app_name: Application name.
+
+    Raises
+        ValueError if no ref is found in HEAD.
+
+    Returns
+        The path to the unpacked project.
+    """
+    filename = head()
+    if not filename:
+        msg = "No ref found."
+        raise ValueError(msg)
+    project_path = os.path.join(get_current_path(), filename)
+    output = os.path.join(get_current_path(), app_name)
+    if not os.path.isdir(output):
+        os.mkdir(output)
+
+    unpack(filename, output)
+
+    return output
+
+
+
 def unpack(filename, output):
-    """Unpacks the exported `filename` project in the .deploy/current directory.
+    """Unpacks the exported `filename` project in the `output` directory.
 
     Params
         filename: Name of the exported project.
+        output: Directory in which unpack the project.
 
     Raises
         ValueError: If the project can't be found in the .deploy/versions

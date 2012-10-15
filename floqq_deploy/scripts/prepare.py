@@ -1,28 +1,32 @@
 """Prepare the project for deploy.
 
-Store the project referenced by .deploy/HEAD with all the specified environment
-settings applied in:
+Equivalent to run:
 
-   .deploy/current/
-
-If there is no ref in HEAD then you need to first export your project. Run
-`floqq-export -h` for more help.
-
-Example:
-
-    $ floqq-prepare production
-    $ ls .deploy/current
-    production
+    $ floqq-fetch-settings
+    $ floqq-unpack
+    $ floqq-apply-settings
 """
+from __future__ import print_function
 import sys
 import os
 import argparse
 
-from floqq_deploy.git import get_archive_filename
-from floqq_deploy.db import head, unpack, get_current_path, get_settings_path
+from floqq_deploy.db import project_unpack
 from floqq_deploy.settings import apply_settings
-from floqq_deploy.scripts import formatter
-from floqq_deploy.utils.scripts import is_valid_environment
+from floqq_deploy.scripts import formatter, fetch_settings
+from floqq_deploy.exceptions import CommandFailed
+
+
+def handle(args):
+    app_name = args.app_name
+    fetch_settings.handle(args)
+    try:
+        output = project_unpack(app_name)
+        apply_settings(app_name, version=args.version)
+    except ValueError, e:
+        raise CommandFailed(e.message)
+
+    print("Project prepared at {0!r}".format(output))
 
 
 def main(argv=None):
@@ -30,32 +34,15 @@ def main(argv=None):
         argv = sys.argv[1:]
     parser = argparse.ArgumentParser(description=__doc__,
                                     formatter_class=formatter)
-    parser.add_argument("env", type=is_valid_environment,
-                        help="Environment name")
+    parser.add_argument("app_name", help="Application name")
+    parser.add_argument("version", help="Application version")
 
     args = parser.parse_args(argv)
-
-    env = args.env
-
-    filename = head()
-    settings_path = os.path.join(get_settings_path(), env)
-    project_path = os.path.join(get_current_path(), filename)
-    if not filename:
-        print "No ref found. Run `floqq-prepare -h` for more help."
+    try:
+        handle(args)
+    except CommandFailed, e:
+        print(e.message)
         return 1
-
-    if not os.path.isdir(settings_path):
-        print "No settings found for %r environment." % env
-        return 1
-
-    output = os.path.join(get_current_path(), env)
-    if not os.path.isdir(output):
-        os.mkdir(output)
-    if not os.path.exists(output):
-        unpack(filename, output)
-    apply_settings(settings_path, project_path)
-
-    print "Project prepared at %r" % output
 
 
 if __name__ == "__main__":

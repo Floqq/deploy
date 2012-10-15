@@ -21,8 +21,12 @@ scripts = {
         "floqq-config = floqq_deploy.scripts.config:main",
         "floqq-export = floqq_deploy.scripts.export:main",
         "floqq-fetch-settings = floqq_deploy.scripts.fetch_settings:main",
+        "floqq-apply-settings = floqq_deploy.scripts.apply_settings:main",
+        "floqq-unpack = floqq_deploy.scripts.unpack:main",
         "floqq-prepare = floqq_deploy.scripts.prepare:main",
-        # "floqq-deploy = floqq_deploy.scripts.deploy:main",
+        "floqq-deploy = floqq_deploy.scripts.deploy:main",
+        "floqq-upload = floqq_deploy.scripts.upload:main",
+        "floqq = floqq_deploy.scripts.floqq:main",
     ]
 }
 

@@ -1,63 +1,73 @@
-"""Fetch project settings for each environment.
+"""Fetch project settings for a given app name.
 
-The settings per each enviroment are stored in:
+The settings per each app are stored in:
 
-   .deploy/settings/<environment name>/
+   .deploy/settings/<app name>/
 
 The path to the settings are specified in the configuration using the
 `settings_url` param.
 
 Example:
 
-You can specify an URL for the production environment and a local path to the
-testing one:
+You can specify an URL for the floqq-api app and a local path to the
+floqq-testing one:
 
-    $ floqq-config production.settings_url https://myserver
-    $ floqq-config testing.settings_url project/configuration/settings
+    $ floqq-config floqq-api.settings_url https://myserver
+    $ floqq-config floqq-testing.settings_url project/configuration/settings
     $ floqq-fetch-settings
     $ ls .deploy/settings
-    production
-    testing
+    floqq-api
+    floqq-testing
 """
 import sys
 import os
 import argparse
 
-from floqq_deploy.db import ENVIRONMENTS, fetch_settings, config
-from floqq_deploy.exceptions import UnsupportedUrl
+from floqq_deploy.settings import fetch
+from floqq_deploy.exceptions import UnsupportedUrl, NoSettingsUrl, CommandFailed
 from floqq_deploy.scripts import formatter
-from floqq_deploy.utils.scripts import is_valid_environment
 
 
-def fetch(env):
-    print "Fetching %r settings..." % env,
-    url = config("settings_url", env)
-    try:
-        fetch_settings(url, env)
-    except ValueError:
-        print "FAILED"
-    except UnsupportedUrl, e:
-        print e.message
+def get_parser(parent=None):
+    """Get the argument parser.
+
+    Params
+        parent (optional): object returned by another parser `add_subparsers`
+                           method.
+
+    Returns
+        The argument parser object.
+    """
+    kwargs = dict(description=__doc__, formatter_class=formatter)
+    if parent is not None:
+        parser = parent.add_parser("fetch-settings", **kwargs)
     else:
-        print
+        parser = argparse.ArgumentParser(**kwargs)
+    parser.add_argument("app_name", help="Application name.")
+
+    return parser
+
+
+def handle(args):
+    app_name = args.app_name
+    try:
+        url, settings_path = fetch(app_name)
+    except (NoSettingsUrl, UnsupportedUrl), e:
+        raise CommandFailed(e.message)
+
+    print("Stored settings from {0!r} into {1!r}".format(url, settings_path))
 
 
 def main(argv=None):
     if argv is None:
         argv = sys.argv[1:]
-    parser = argparse.ArgumentParser(description=__doc__,
-                                    formatter_class=formatter)
-    parser.add_argument("env", type=is_valid_environment, nargs="?",
-                        help="Environment name")
-
+    parser = get_parser()
     args = parser.parse_args(argv)
-
-    env = args.env
-    if env is None:
-        for env in ENVIRONMENTS:
-            fetch(env)
-    else:
-        fetch(env)
+    try:
+        handle(args)
+    except CommandFailed, e:
+        print(e.message)
+        return 1
 
 
 if __name__ == "__main__":

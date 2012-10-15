@@ -30,21 +30,10 @@ def is_valid_param_name(value):
     try:
         env, name = value.split(".", 1)
     except ValueError:
-        msg = "Parameter name must have the format <environ>.<param name>"
+        msg = "Parameter name must have the format <app name>.<param name>"
         raise argparse.ArgumentTypeError(msg)
-
-    is_valid_environment(env)
 
     return value
-
-
-def is_valid_environment(env_name):
-    """Checks if the given environment name is allowed"""
-    if env_name not in ENVIRONMENTS:
-        msg = "Specified environment is not supported"
-        raise argparse.ArgumentTypeError(msg)
-
-    return env_name
 
 
 def is_tar(path):
