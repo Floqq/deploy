@@ -26,6 +26,8 @@ scripts = {
         "floqq-prepare = floqq_deploy.scripts.prepare:main",
         "floqq-deploy = floqq_deploy.scripts.deploy:main",
         "floqq-upload = floqq_deploy.scripts.upload:main",
+        "floqq-encrypt-settings = floqq_deploy.scripts.encrypt_settings:main",
+        "floqq-decrypt-settings = floqq_deploy.scripts.decrypt_settings:main",
         "floqq = floqq_deploy.scripts.floqq:main",
     ]
 }

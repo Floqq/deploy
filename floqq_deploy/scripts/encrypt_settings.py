@@ -2,29 +2,27 @@
 # Copyright (c) 2012 Floqq innovation SL. All Right Reserved
 #
 
-"""Upload the project to GAE.
+"""Encrypt settings.
 
-Uploads the prepared project stored in .deploy/current/.
+Encrypt all the settings whose name is in the config file under
+security.secure_settings param.
 """
 from __future__ import print_function
 import sys
 import os
 import argparse
+import getpass
 
-from floqq_deploy import deploy
-from floqq_deploy.db import get_current_path
+from floqq_deploy.security import encrypt_settings
 from floqq_deploy.scripts import formatter
 from floqq_deploy.exceptions import CommandFailed
 
 
 def handle(args):
+    settings_filename = "settings.py"
     app_name = args.app_name
-    app_path = os.path.join(get_current_path(), app_name)
-    if os.path.isdir(app_path):
-        deploy.run(app_path)
-    else:
-        raise CommandFailed("{0!r} is not prepared for deployment".format(
-                            app_name))
+    password = getpass.getpass("Encryption password: ")
+    encrypt_settings(app_name, filename=settings_filename, key=password)
 
 
 def main(argv=None):
