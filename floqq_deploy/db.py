@@ -30,6 +30,9 @@ def init(project_path):
     else:
         shutil.copytree(src, dst)
 
+    versions_dir = os.path.join(dst, "versions")
+    if not os.path.exists(versions_dir):
+        os.mkdir(versions_dir)
 
 def get_config_path():
     """Returns the path to the .deploy/config file."""
@@ -140,7 +143,7 @@ def project_unpack(app_name):
     project_path = os.path.join(get_current_path(), filename)
     output = os.path.join(get_current_path(), app_name)
     if not os.path.isdir(output):
-        os.mkdir(output)
+        os.makedirs(output)
 
     unpack(filename, output)
 
