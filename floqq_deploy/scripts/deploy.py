@@ -52,10 +52,8 @@ def handle(args):
 def main(argv=None):
     if argv is None:
         argv = sys.argv[1:]
-
     parser = get_parser()
     args = parser.parse_args(argv)
-
     try:
         handle(args)
     except CommandFailed, e:

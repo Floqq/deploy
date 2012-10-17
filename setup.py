@@ -8,7 +8,7 @@ py_version = sys.version_info[:2]
 here = os.path.abspath(os.path.dirname(__file__))
 
 try:
-    README = open(os.path.join(here, "README.txt")).read()
+    README = open(os.path.join(here, "README.md")).read()
 except IOError:
     README = ""
 
@@ -41,6 +41,7 @@ setup(name="floqq_deploy",
       author="Anler Hernandez Peral",
       author_email="anler86@gmail.com",
       packages=find_packages(exclude=["tests"]),
+      package_data={"floqq_deploy": ["template/**/*"]},
       entry_points=scripts,
       test_suite="floqq_deploy.tests",
       install_requires=dependencies)
