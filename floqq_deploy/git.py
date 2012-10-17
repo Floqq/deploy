@@ -26,6 +26,7 @@ def archive(tree, output, format="tar"):
     Equivalent to:
         git archive -o <name>
     """
+    output = output.replace('\\', '/') # Windows fix
     local("git archive --format=%s -o %s %s" % (format, output, tree))
 
 
