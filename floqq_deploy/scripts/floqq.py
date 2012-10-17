@@ -8,11 +8,13 @@ import os
 import argparse
 
 from floqq_deploy.scripts import formatter
-from floqq_deploy.scripts import init, config, deploy, fetch_settings
+from floqq_deploy.scripts import (init, config, deploy, fetch_settings,
+                                  compilemessages)
 from floqq_deploy.exceptions import CommandFailed
 
 _subcommands = {"init": init, "config": config, "deploy": deploy,
-                "fetch-settings": fetch_settings}
+                "fetch-settings": fetch_settings,
+                "compilemessages": compilemessages}
 
 def handle(args):
     subcommand = args.subcommand
@@ -31,6 +33,7 @@ def main(argv=None):
     config_parser = config.get_parser(subparsers)
     deploy_parser = deploy.get_parser(subparsers)
     fetch_settings_parser = fetch_settings.get_parser(subparsers)
+    compilemessages_parser = compilemessages.get_parser(subparsers)
 
     args = parser.parse_args(argv)
     try:

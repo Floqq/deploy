@@ -6,6 +6,7 @@ Equivalent to run:
     $ floqq-unpack
     $ floqq-apply-settings
     $ floqq-decrypt-settings
+    $ floqq-compilemessages
 """
 from __future__ import print_function
 import sys
@@ -14,7 +15,8 @@ import argparse
 
 from floqq_deploy.db import project_unpack
 from floqq_deploy.settings import apply_settings
-from floqq_deploy.scripts import formatter, fetch_settings, decrypt_settings
+from floqq_deploy.scripts import (formatter, fetch_settings, decrypt_settings,
+                                  compilemessages)
 from floqq_deploy.exceptions import CommandFailed
 
 
@@ -27,6 +29,7 @@ def handle(args):
     except ValueError, e:
         raise CommandFailed(e.message)
     decrypt_settings.handle(args)
+    compilemessages.handle(args)
 
     print("Project prepared at {0!r}".format(output))
 

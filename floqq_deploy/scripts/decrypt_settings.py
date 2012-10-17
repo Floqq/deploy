@@ -22,7 +22,10 @@ def handle(args):
     settings_filename = "settings.py"
     app_name = args.app_name
     password = getpass.getpass("Decryption password: ")
-    decrypt_settings(app_name, filename=settings_filename, key=password)
+    if password:
+        decrypt_settings(app_name, filename=settings_filename, key=password)
+    else:
+        print("Skipping decryption")
 
 
 def main(argv=None):
