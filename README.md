@@ -4,23 +4,52 @@ Provides several programs to make the deployment procedure easier and more secur
 
 ## Installation
 
+    :::sh
     python setup.py install
+
+## Run tests
+
+    :::sh
+    python setup.py test
+
+## Development
+
+    :::sh
+    python setup.py develop
 
 ## Usage
 
 The main commands are these:
 
+    :::sh
     floqq init
     floqq config <app name>.settings_url <path to settings>
     floqq deploy <git tree> <app name> <app version>
 
-Apart from those commands you have also:
 
-* floqq-export
-* floqq-upload
-* floqq-prepare
-* floqq-unpack
-* floqq-fetch-settings
-* floqq-apply-settings
+`floqq deploy` is equivalent to running these commands in order:
+
+    :::sh
+    floqq-export
+    floqq-prepare
+    floqq-upload
+
+`floqq-prepare` is equivalent to running these commands in order:
+
+    :::sh
+    floqq-fetch-settings
+    floqq-unpack
+    floqq-apply-settings
+    floqq-decrypt-settings
+    floqq-compilemessages
+
+## Other commands
+
+* `floqq-encrypt-settings`
+* `floqq-deploy`
+* `floqq-init`
+* `floqq-config`
+
+## Getting help
 
 Run `command -h` for more help.
