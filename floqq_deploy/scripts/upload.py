@@ -17,9 +17,33 @@ from floqq_deploy.scripts import formatter
 from floqq_deploy.exceptions import CommandFailed
 
 
+def get_parser(parent=None):
+    """Get the argument parser.
+
+    Params
+        parent (optional): object returned by another parser `add_subparsers`
+                           method.
+
+    Returns
+        The argument parser object.
+    """
+    kwargs = dict(description=__doc__, formatter_class=formatter)
+    if parent is not None:
+        parser = parent.add_parser("upload", **kwargs)
+    else:
+        parser = argparse.ArgumentParser(**kwargs)
+    parser.add_argument("app_name", help="Application name.")
+
+    return parser
+
+
 def handle(args):
     app_name = args.app_name
     app_path = os.path.join(get_current_path(), app_name)
+    return process(app_name, app_path)
+
+
+def process(app_name, app_path):
     if os.path.isdir(app_path):
         deploy.run(app_path)
     else:
@@ -30,10 +54,7 @@ def handle(args):
 def main(argv=None):
     if argv is None:
         argv = sys.argv[1:]
-    parser = argparse.ArgumentParser(description=__doc__,
-                                     formatter_class=formatter)
-    parser.add_argument("app_name", help="Application name.")
-
+    parser = get_parser()
     args = parser.parse_args(argv)
     try:
         handle(args)

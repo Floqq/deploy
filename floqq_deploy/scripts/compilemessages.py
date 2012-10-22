@@ -42,6 +42,10 @@ def get_parser(parent=None):
 def handle(args):
     app_name = args.app_name
     locale = args.locale
+    return process(app_name, locale)
+
+
+def process(app_name, locale=None):
     app_path = os.path.join(get_current_path(), app_name, "floqq")
     if os.path.isdir(app_path):
         print("Compiling .po files")

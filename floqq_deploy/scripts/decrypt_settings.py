@@ -18,9 +18,34 @@ from floqq_deploy.scripts import formatter
 from floqq_deploy.exceptions import CommandFailed
 
 
+def get_parser(parent=None):
+    """Get the argument parser.
+
+    Params
+        parent (optional): object returned by another parser `add_subparsers`
+                           method.
+
+    Returns
+        The argument parser object.
+    """
+    kwargs = dict(description=__doc__, formatter_class=formatter)
+    if parent is not None:
+        parser = parent.add_parser("apply-settings", **kwargs)
+    else:
+        parser = argparse.ArgumentParser(**kwargs)
+    parser.add_argument("app_name", help="Application name.")
+
+    return parser
+
+
 def handle(args):
-    settings_filename = "settings.py"
     app_name = args.app_name
+    return process(app_name)
+
+
+def process(app_name, settings_filename=None):
+    if settings_filename is None:
+        settings_filename = "settings.py"
     password = getpass.getpass("Decryption password: ")
     if password:
         decrypt_settings(app_name, filename=settings_filename, key=password)
@@ -31,10 +56,7 @@ def handle(args):
 def main(argv=None):
     if argv is None:
         argv = sys.argv[1:]
-    parser = argparse.ArgumentParser(description=__doc__,
-                                     formatter_class=formatter)
-    parser.add_argument("app_name", help="Application name.")
-
+    parser = get_parser()
     args = parser.parse_args(argv)
     try:
         handle(args)

@@ -50,6 +50,10 @@ def get_parser(parent=None):
 
 def handle(args):
     app_name = args.app_name
+    process(app_name)
+
+
+def process(app_name):
     try:
         url, settings_path = fetch(app_name)
     except (NoSettingsUrl, UnsupportedUrl), e:

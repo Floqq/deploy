@@ -39,6 +39,8 @@ def get_parser(parent=None):
     parser.add_argument("version", help="Application version.")
     parser.add_argument("-l", "--locale", help=("The locale to process. "
                                                 "Default is to process all."))
+    parser.add_argument("-s", "--settings", help=("Different name of settings "
+                                                  "to use."))
 
     return parser
 

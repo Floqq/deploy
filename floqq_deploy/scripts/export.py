@@ -22,8 +22,32 @@ from floqq_deploy.scripts import formatter
 from floqq_deploy.exceptions import CommandFailed
 
 
+def get_parser(parent=None):
+    """Get the argument parser.
+
+    Params
+        parent (optional): object returned by another parser `add_subparsers`
+                           method.
+
+    Returns
+        The argument parser object.
+    """
+    kwargs = dict(description=__doc__, formatter_class=formatter)
+    if parent is not None:
+        parser = parent.add_parser("export", **kwargs)
+    else:
+        parser = argparse.ArgumentParser(**kwargs)
+    parser.add_argument("tree", help="Git tree name")
+
+    return parser
+
+
 def handle(args):
     tree = args.tree
+    return process(tree)
+
+
+def process(tree):
     filename = git.get_archive_filename(tree)
     print "Creating archive: %s" % filename
     outputfile = os.path.join(get_versions_path(), filename)
@@ -34,9 +58,7 @@ def handle(args):
 def main(argv=None):
     if argv is None:
         argv = sys.argv[1:]
-    parser = argparse.ArgumentParser(description=__doc__,
-                                     formatter_class=formatter)
-    parser.add_argument("tree", help="Git tree name")
+    parser = get_parser()
     args = parser.parse_args(argv)
     try:
         handle(args)

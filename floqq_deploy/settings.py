@@ -11,7 +11,7 @@ from floqq_deploy.db import get_settings_path, get_current_path, config
 from floqq_deploy.exceptions import UnsupportedUrl, NoSettingsUrl
 
 
-def apply_settings(app_name, version):
+def apply_settings(app_name, version, settings=None):
     """Apply settings to a project.
 
     It searches the settings in:
@@ -25,6 +25,8 @@ def apply_settings(app_name, version):
     Params
         app_name: Application.
         version: Application version.
+        settings (optional): Settings dir to apply, if None it looks for a dir
+        with the same name as <app_name>.
 
     Raises
         ValueError if the settings or the unpacked project are not found.
@@ -32,7 +34,9 @@ def apply_settings(app_name, version):
     Returns
         the tuple (settings_path, project_path)
     """
-    settings_path = os.path.join(get_settings_path(), app_name)
+    if settings is None:
+        settings = app_name
+    settings_path = os.path.join(get_settings_path(), settings)
     if not os.path.isdir(settings_path):
         msg = "No settings found."
         raise ValueError(msg)
