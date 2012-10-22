@@ -142,8 +142,9 @@ def project_unpack(app_name):
         raise ValueError(msg)
     project_path = os.path.join(get_current_path(), filename)
     output = os.path.join(get_current_path(), app_name)
-    if not os.path.isdir(output):
-        os.makedirs(output)
+    if os.path.exists(output):
+        shutil.rmtree(output)
+    os.mkdir(output)
 
     unpack(filename, output)
 
