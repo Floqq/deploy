@@ -56,17 +56,18 @@ def transform_settings(app_name, filename, key, transformer):
         raise ValueError(msg)
 
     secure_settings_string = config("secure_settings", section="security")
-    secure_settings = set(s.strip() for s in secure_settings_string.split(","))
+    if secure_settings_string is not None:
+        secure_settings = set(s.strip() for s in secure_settings_string.split(","))
 
-    with open(settings_path) as f:
-        cipher_tokens = []
-        callback = parse_settings(cipher_tokens, secure_settings, key,
-                                  transformer)
-        tokenize.tokenize(f.readline, callback)
-        cipher_settings = tokenize.untokenize(cipher_tokens)
+        with open(settings_path) as f:
+            cipher_tokens = []
+            callback = parse_settings(cipher_tokens, secure_settings, key,
+                                      transformer)
+            tokenize.tokenize(f.readline, callback)
+            cipher_settings = tokenize.untokenize(cipher_tokens)
 
-    with open(settings_path, "w") as f:
-        f.write(cipher_settings)
+        with open(settings_path, "w") as f:
+            f.write(cipher_settings)
 
 
 def encrypt_settings(app_name, filename, key):
