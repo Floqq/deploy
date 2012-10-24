@@ -35,7 +35,7 @@ scripts = {
 
 
 setup(name="floqq_deploy",
-      version="1.0",
+      version="1.1",
       description="Deployment script for Floqq",
       long_description=README,
       author="Anler Hernandez Peral",
