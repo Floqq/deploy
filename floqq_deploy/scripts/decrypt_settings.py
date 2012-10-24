@@ -30,7 +30,7 @@ def get_parser(parent=None):
     """
     kwargs = dict(description=__doc__, formatter_class=formatter)
     if parent is not None:
-        parser = parent.add_parser("apply-settings", **kwargs)
+        parser = parent.add_parser("decrypt-settings", **kwargs)
     else:
         parser = argparse.ArgumentParser(**kwargs)
     parser.add_argument("app_name", help="Application name.")
@@ -48,9 +48,10 @@ def process(app_name, settings_filename=None):
         settings_filename = "settings.py"
     password = getpass.getpass("Decryption password: ")
     if password:
+        print("Decrypting...")
         decrypt_settings(app_name, filename=settings_filename, key=password)
     else:
-        print("Skipping decryption")
+        print("Decryption skipped.")
 
 
 def main(argv=None):

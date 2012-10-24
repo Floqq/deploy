@@ -15,12 +15,15 @@ from floqq_deploy.scripts import formatter
 from floqq_deploy.scripts import init, config, deploy, fetch_settings
 from floqq_deploy.scripts import apply_settings, compilemessages, unpack
 from floqq_deploy.scripts import export, upload
+from floqq_deploy.scripts import encrypt_settings, decrypt_settings
 from floqq_deploy.exceptions import CommandFailed
 
 _subcommands = {"init": init, "config": config, "deploy": deploy,
                 "fetch-settings": fetch_settings, "upload": upload,
                 "unpack": unpack, "apply-settings": apply_settings,
-                "export": export, "compilemessages": compilemessages}
+                "export": export, "compilemessages": compilemessages,
+                "encrypt-settings": encrypt_settings,
+                "decrypt-settings": decrypt_settings}
 
 def handle(args):
     subcommand = args.subcommand
@@ -43,6 +46,8 @@ def main(argv=None):
     unpack_parser = unpack.get_parser(subparsers)
     export_parser = export.get_parser(subparsers)
     upload_parser = upload.get_parser(subparsers)
+    encrypt_parser = encrypt_settings.get_parser(subparsers)
+    decrypt_parser = decrypt_settings.get_parser(subparsers)
     compilemessages_parser = compilemessages.get_parser(subparsers)
 
     args = parser.parse_args(argv)

@@ -90,14 +90,31 @@ _PAD_BYTE = "X"
 
 
 def pad(text):
-    """Pad text so its lenth is multiple of 8"""
-    padding = (8 - len(text) % 8) * _PAD_BYTE
+    """Pad text so its lenth is multiple of 8.
+    
+    Param
+        text: The text to pad.
+    """
+    num_pad = 8 - len(text) % 8
+    padding = _PAD_BYTE * (num_pad - 1) + str(num_pad)
     return text + padding
 
 
 def unpad(text):
-    """Unpad text padded before with the `pad` function"""
-    return text.rstrip(_PAD_BYTE)
+    """Unpad text padded before with the `pad` function.
+    
+    Param
+        text: Previously padded text.
+
+    Raises
+        ValueError if the text can't be unpadded.
+    """
+    try:
+        num_pad = int(text[-1])
+    except (IndexError, ValueError):
+        msg = "Text can't be unpadded. Maybe wasn't correctly padded."
+        raise ValueError(msg)
+    return text[:-num_pad]
 
 
 def encrypt(text, key):
