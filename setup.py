@@ -12,8 +12,7 @@ try:
 except IOError:
     README = ""
 
-dependencies = [
-]
+dependencies = ['pycrypto == 2.6']
 
 scripts = {
     "console_scripts": [
