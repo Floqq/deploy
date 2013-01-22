@@ -2,6 +2,7 @@
 
 Equivalent to run:
 
+    $ floqq-export
     $ floqq-fetch-settings
     $ floqq-unpack
     $ floqq-apply-settings
@@ -16,7 +17,8 @@ import argparse
 from floqq_deploy.db import project_unpack
 from floqq_deploy.settings import apply_settings
 from floqq_deploy.scripts import (formatter, fetch_settings, decrypt_settings,
-                                  apply_settings, compilemessages, unpack)
+                                  apply_settings, compilemessages, unpack,
+                                  export)
 from floqq_deploy.exceptions import CommandFailed
 
 
@@ -35,6 +37,7 @@ def get_parser(parent=None):
         parser = parent.add_parser("prepare", **kwargs)
     else:
         parser = argparse.ArgumentParser(**kwargs)
+    parser.add_argument("tree", help="Git tree name")
     parser.add_argument("app_name", help="Application name")
     parser.add_argument("version", help="Application version")
     parser.add_argument("-s", "--settings", help=("Different name of settings "
@@ -44,15 +47,17 @@ def get_parser(parent=None):
 
 
 def handle(args):
+    tree = args.tree
     app_name = args.app_name
     settings = args.settings
     version = args.version
-    return process(app_name, version, settings)
+    return process(tree, app_name, version, settings)
 
 
-def process(app_name, version, settings=None):
+def process(tree, app_name, version, settings=None):
     if settings is None:
         settings = app_name
+    export.process(tree)
     fetch_settings.process(settings)
     output = unpack.process(app_name)
     apply_settings.process(app_name, version, settings)

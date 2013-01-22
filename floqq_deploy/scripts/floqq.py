@@ -14,7 +14,7 @@ import argparse
 from floqq_deploy.scripts import formatter
 from floqq_deploy.scripts import init, config, deploy, fetch_settings
 from floqq_deploy.scripts import apply_settings, compilemessages, unpack
-from floqq_deploy.scripts import export, upload
+from floqq_deploy.scripts import export, upload, prepare
 from floqq_deploy.scripts import encrypt_settings, decrypt_settings
 from floqq_deploy.exceptions import CommandFailed
 
@@ -22,6 +22,7 @@ _subcommands = {"init": init, "config": config, "deploy": deploy,
                 "fetch-settings": fetch_settings, "upload": upload,
                 "unpack": unpack, "apply-settings": apply_settings,
                 "export": export, "compilemessages": compilemessages,
+                "prepare": prepare,
                 "encrypt-settings": encrypt_settings,
                 "decrypt-settings": decrypt_settings}
 
@@ -39,6 +40,7 @@ def main(argv=None):
                                        help="available subcommands")
 
     init_parser = init.get_parser(subparsers)
+    prepare_parser = prepare.get_parser(subparsers)
     config_parser = config.get_parser(subparsers)
     deploy_parser = deploy.get_parser(subparsers)
     fetch_settings_parser = fetch_settings.get_parser(subparsers)
