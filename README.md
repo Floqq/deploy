@@ -24,9 +24,10 @@ The main commands are these:
     :::sh
     cd <app engine application to deploy directory>/
     floqq init
-    floqq config <app name>.settings_url <path to settings> # use floqq-settings
+    floqq config <app name>.settings_url <path to settings>
     floqq deploy <git tree> <app name> <app version>
 
+`<path to settings>` use app [settings](https://github.com/Floqq/settings)
 
 `floqq deploy` is equivalent to running these commands in order:
 
