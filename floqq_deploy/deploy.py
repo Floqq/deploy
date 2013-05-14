@@ -5,8 +5,6 @@ import tempfile
 import tarfile
 import subprocess
 
-from google.appengine.tools import appcfg
-
 
 def run(app_path):
     """Runs google's appcfg.py program to deploy an app.
@@ -25,6 +23,8 @@ def run_appcfg(app_path):
 
     `app` is the path to the app.
     """
+    from google.appengine.tools import appcfg
+
     argv = ["appcfg.py", "update", app_path]
     try:
         appcfg.AppCfgApp(argv).Run()
