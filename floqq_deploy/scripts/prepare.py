@@ -8,6 +8,7 @@ Equivalent to run:
     $ floqq-apply-settings
     $ floqq-decrypt-settings
     $ floqq-compilemessages
+    $ floqq-dist
 """
 from __future__ import print_function
 import sys
@@ -18,7 +19,7 @@ from floqq_deploy.db import project_unpack
 from floqq_deploy.settings import apply_settings
 from floqq_deploy.scripts import (formatter, fetch_settings, decrypt_settings,
                                   apply_settings, compilemessages, unpack,
-                                  export)
+                                  export, dist)
 from floqq_deploy.exceptions import CommandFailed
 
 
@@ -42,6 +43,8 @@ def get_parser(parent=None):
     parser.add_argument("version", help="Application version")
     parser.add_argument("-s", "--settings", help=("Different name of settings "
                                                   "to use."))
+    parser.add_argument("-n", "--skip-dist", action="store_true",
+                        help="Don't run dist subcommand")
 
     return parser
 
@@ -51,10 +54,11 @@ def handle(args):
     app_name = args.app_name
     settings = args.settings
     version = args.version
-    return process(tree, app_name, version, settings)
+    skip_dist = args.skip_dist
+    return process(tree, app_name, version, settings, skip_dist=skip_dist)
 
 
-def process(tree, app_name, version, settings=None):
+def process(tree, app_name, version, settings=None, skip_dist=False):
     if settings is None:
         settings = app_name
     export.process(tree)
@@ -63,6 +67,8 @@ def process(tree, app_name, version, settings=None):
     apply_settings.process(app_name, version, settings)
     decrypt_settings.process(app_name)
     compilemessages.process(app_name)
+    if not skip_dist:
+        dist.process(app_name)
 
     print("Project prepared at {0!r}".format(output))
 

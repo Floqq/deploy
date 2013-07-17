@@ -28,6 +28,7 @@ scripts = {
         "floqq-encrypt-settings = floqq_deploy.scripts.encrypt_settings:main",
         "floqq-decrypt-settings = floqq_deploy.scripts.decrypt_settings:main",
         "floqq-compilemessages = floqq_deploy.scripts.compilemessages:main",
+        "floqq-dist = floqq_deploy.scripts.dist:main",
         "floqq = floqq_deploy.scripts.floqq:main",
     ]
 }

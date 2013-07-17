@@ -3,7 +3,7 @@ Provides several programs to do tasks such as deployment and translation easier
 and more secure.
 
 For more help on subcommands run:
-    
+
     floqq <subcommand> -h
 """
 from __future__ import print_function
@@ -14,7 +14,7 @@ import argparse
 from floqq_deploy.scripts import formatter
 from floqq_deploy.scripts import init, config, deploy, fetch_settings
 from floqq_deploy.scripts import apply_settings, compilemessages, unpack
-from floqq_deploy.scripts import export, upload, prepare
+from floqq_deploy.scripts import export, upload, prepare, dist
 from floqq_deploy.scripts import encrypt_settings, decrypt_settings
 from floqq_deploy.exceptions import CommandFailed
 
@@ -22,7 +22,7 @@ _subcommands = {"init": init, "config": config, "deploy": deploy,
                 "fetch-settings": fetch_settings, "upload": upload,
                 "unpack": unpack, "apply-settings": apply_settings,
                 "export": export, "compilemessages": compilemessages,
-                "prepare": prepare,
+                "prepare": prepare, "dist": dist,
                 "encrypt-settings": encrypt_settings,
                 "decrypt-settings": decrypt_settings}
 
@@ -51,6 +51,7 @@ def main(argv=None):
     encrypt_parser = encrypt_settings.get_parser(subparsers)
     decrypt_parser = decrypt_settings.get_parser(subparsers)
     compilemessages_parser = compilemessages.get_parser(subparsers)
+    dist_parser = dist.get_parser(subparsers)
 
     args = parser.parse_args(argv)
     try:

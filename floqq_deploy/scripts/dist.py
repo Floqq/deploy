@@ -1,21 +1,25 @@
-"""Deploy the project.
+#
+# Copyright (c) 2012 Floqq innovation SL. All Right Reserved
+#
 
-Equivalent to:
+"""Concatenate, minify and add revision to static files.
 
-    $ floqq-export
-    $ floqq-prepare
-    $ floqq-upload
+This command will execute grunt and bower. It basically installs all
+bower dependencies and then prepares a dist by running grunt:
 
-Deploys the prepared project stored in .deploy/current/.
+    $ bower install
+    $ grunt dist
+
+This command is equivalent to django `manage.py compilemessages [options]`
 """
 from __future__ import print_function
 import sys
 import os
 import argparse
 
-from floqq_deploy import deploy
+from floqq_deploy.dist import grunt, bower
 from floqq_deploy.db import get_current_path
-from floqq_deploy.scripts import formatter, export, prepare, upload
+from floqq_deploy.scripts import formatter
 from floqq_deploy.exceptions import CommandFailed
 
 
@@ -31,26 +35,26 @@ def get_parser(parent=None):
     """
     kwargs = dict(description=__doc__, formatter_class=formatter)
     if parent is not None:
-        parser = parent.add_parser("deploy", **kwargs)
+        parser = parent.add_parser("dist", **kwargs)
     else:
         parser = argparse.ArgumentParser(**kwargs)
-    parser.add_argument("tree", help="Git tree name")
     parser.add_argument("app_name", help="Application name.")
-    parser.add_argument("version", help="Application version.")
-    parser.add_argument("-l", "--locale", help=("The locale to process. "
-                                                "Default is to process all."))
-    parser.add_argument("-s", "--settings", help=("Different name of settings "
-                                                  "to use."))
-    parser.add_argument("-n", "--skip-dist", action="store_true",
-                        help="Don't run dist subcommand")
 
     return parser
 
 
 def handle(args):
-    export.handle(args)
-    prepare.handle(args)
-    upload.handle(args)
+    app_name = args.app_name
+    return process(app_name)
+
+
+def process(app_name):
+    app_path = os.path.join(get_current_path(), app_name)
+    if os.path.isdir(app_path):
+        bower(app_path)
+        grunt(app_path)
+    else:
+        raise CommandFailed("Can't find {0!r}".format(app_path))
 
 
 def main(argv=None):
