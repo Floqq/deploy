@@ -44,6 +44,7 @@ The main commands are these:
     floqq-apply-settings
     floqq-decrypt-settings
     floqq-compilemessages
+    floqq-dist
 
 ## Other commands
 
