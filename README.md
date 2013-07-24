@@ -46,6 +46,13 @@ The main commands are these:
     floqq-compilemessages
     floqq-dist
 
+By default the deploy script is going to try to run grunt and bower,
+since this doesn't make sense in the api you need to run the program
+with the ``-n`` option:
+
+    :::sh
+    floqq deploy -n <git tree> <app name> <app version>
+
 ## Other commands
 
 * `floqq-encrypt-settings`
