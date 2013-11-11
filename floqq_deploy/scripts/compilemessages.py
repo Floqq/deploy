@@ -46,7 +46,7 @@ def handle(args):
 
 
 def process(app_name, locale=None):
-    app_path = os.path.join(get_current_path(), app_name, "floqq")
+    app_path = os.path.join(get_current_path(), app_name)
     if os.path.isdir(app_path):
         print("Compiling .po files")
         django_compilemessages(app_path, locale)
